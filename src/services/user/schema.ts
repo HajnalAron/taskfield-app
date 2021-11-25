@@ -1,6 +1,7 @@
 import sequelizeInstance from "../../db/connection";
-import { DataTypes, Model } from "sequelize/dist";
-import axios from "axios";
+import { DataTypes, Model, where } from "sequelize/dist";
+import bcrypt from "bcrypt";
+import { loginData } from "../../../types/loginData";
 
 interface userInstance extends Model {
   id: number;
@@ -12,8 +13,8 @@ interface userInstance extends Model {
   role: "administrator" | "support" | "user";
 }
 
-// profile pic with initials ==> https://eu.ui-avatars.com/
 // active???
+
 const User = sequelizeInstance.define<userInstance>(
   "user",
   {
@@ -62,8 +63,37 @@ User.beforeCreate((user) => {
   user.avatar = `https://eu.ui-avatars.com/?name=${user.surname}+${user.firstname}&background=${color}&rounded=true`;
 });
 
-// User.beforeSave(async (user) => {
-//   const hashedPassword
-// });
+User.beforeSave(async (user) => {
+  if (user.changed("password")) {
+    user.password = await bcrypt.hash(user.password, 10);
+  }
+});
+
+User.prototype.checkValidity = async function async(
+  loginData: loginData
+): Promise<boolean> {
+  const { email, password } = loginData;
+  const targetUser = await User.findOne({
+    where: {
+      email: email
+    }
+  });
+  if (targetUser) {
+    const isUserCredentialsValid = await bcrypt.compare(
+      targetUser.password,
+      password
+    );
+    if (isUserCredentialsValid) {
+      return true;
+    } else return false;
+  } else return false;
+};
+
+User.prototype.toJSON = function (): any {
+  let user = Object.assign({}, this.get());
+  delete user.password;
+  delete user.refreshToken;
+  return user;
+};
 
 export default User;

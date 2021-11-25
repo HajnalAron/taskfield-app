@@ -1,5 +1,6 @@
 import sequelizeInstance from "../../db/connection";
 import { DataTypes, Model } from "sequelize/dist";
+import axios from "axios";
 
 interface userInstance extends Model {
   id: number;
@@ -7,6 +8,7 @@ interface userInstance extends Model {
   password: string;
   firstname: string;
   surname: string;
+  avatar: string;
   role: "administrator" | "support" | "user";
 }
 
@@ -44,12 +46,21 @@ const User = sequelizeInstance.define<userInstance>(
       defaultValue: "user",
       allowNull: false,
       values: ["administrator", "support", "user"]
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   },
   {
     timestamps: true
   }
 );
+
+User.beforeCreate((user) => {
+  const color = Math.floor(Math.random() * 16777215).toString(16);
+  user.avatar = `https://eu.ui-avatars.com/?name=${user.surname}+${user.firstname}&background=${color}&rounded=true`;
+});
 
 // User.beforeSave(async (user) => {
 //   const hashedPassword

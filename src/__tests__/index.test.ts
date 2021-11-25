@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import dotenv from "dotenv";
 import app from "../app";
-import sequelizeInstance, { connectToDB } from "../db/connection";
+import sequelizeInstance from "../db/connection";
 
 dotenv.config();
 

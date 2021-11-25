@@ -1,9 +1,18 @@
 import sequelizeInstance from "../../db/connection";
-import { DataTypes } from "sequelize/dist";
+import { DataTypes, Model } from "sequelize/dist";
+
+interface userInstance extends Model {
+  id: number;
+  email: string;
+  password: string;
+  firstname: string;
+  surname: string;
+  role: "administrator" | "support" | "user";
+}
 
 // profile pic with initials ==> https://eu.ui-avatars.com/
 // active???
-const User = sequelizeInstance.define(
+const User = sequelizeInstance.define<userInstance>(
   "user",
   {
     id: {
@@ -41,5 +50,9 @@ const User = sequelizeInstance.define(
     timestamps: true
   }
 );
+
+// User.beforeSave(async (user) => {
+//   const hashedPassword
+// });
 
 export default User;

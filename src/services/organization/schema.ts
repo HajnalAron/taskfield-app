@@ -1,7 +1,12 @@
 import sequelizeInstance from "../../db/connection";
-import { DataTypes } from "sequelize/dist";
+import { DataTypes, Model } from "sequelize/dist";
 
-const Organization = sequelizeInstance.define(
+interface organizationIstance extends Model {
+  id: number;
+  name: string;
+}
+
+const Organization = sequelizeInstance.define<organizationIstance>(
   "organization",
   {
     id: {

@@ -1,4 +1,4 @@
-import sequelizeInstance from "../../db/connection";
+import sequelizeInstance from "../connection";
 import { DataTypes } from "sequelize/dist";
 
 const TaskUser = sequelizeInstance.define(

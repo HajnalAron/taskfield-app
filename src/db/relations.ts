@@ -1,11 +1,11 @@
 import Category from "../services/categories/schema";
 import Organization from "../services/organization/schema";
-import OrganizationUser from "./relations/OrganizationUser";
+import OrganizationUser from "./relation_tables/OrganizationUser";
 import User from "../services/user/schema";
 import Task from "../services/task/schema";
-import TaskUser from "./relations/TaskUser";
+import TaskUser from "./relation_tables/TaskUser";
 import Workspace from "../services/workspace/schema";
-import WorkspaceUser from "./relations/WorkspaceUser";
+import WorkspaceUser from "./relation_tables/WorkspaceUser";
 
 // one-to-many relations
 Organization.hasMany(Workspace);
@@ -25,7 +25,7 @@ User.belongsToMany(Organization, {
 });
 
 User.belongsToMany(Workspace, {
-  as: "aember",
+  as: "member",
   through: { model: WorkspaceUser },
   foreignKey: "memberId"
 });

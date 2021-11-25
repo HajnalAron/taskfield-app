@@ -1,7 +1,12 @@
 import sequelizeInstance from "../../db/connection";
-import { DataTypes } from "sequelize/dist";
+import { DataTypes, Model } from "sequelize/dist";
 
-const Task = sequelizeInstance.define(
+interface taskInstance extends Model {
+  id: number;
+  name: string;
+}
+
+const Task = sequelizeInstance.define<taskInstance>(
   "task",
   {
     id: {

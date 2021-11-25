@@ -1,7 +1,13 @@
 import sequelizeInstance from "../../db/connection";
-import { DataTypes } from "sequelize/dist";
+import { DataTypes, Model } from "sequelize/dist";
 
-const Category = sequelizeInstance.define(
+interface categoryInstance extends Model {
+  id: number;
+  text: string;
+  color: string;
+}
+
+const Category = sequelizeInstance.define<categoryInstance>(
   "category",
   {
     id: {

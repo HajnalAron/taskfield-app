@@ -8,10 +8,6 @@ const OrganizationUser = sequelizeInstance.define(
       primaryKey: true,
       type: DataTypes.INTEGER,
       autoIncrement: true
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
     }
   },
   {

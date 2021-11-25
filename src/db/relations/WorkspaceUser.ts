@@ -10,7 +10,6 @@ const WorkspaceUser = sequelizeInstance.define(
       autoIncrement: true
     }
   },
-
   {
     timestamps: true
   }

@@ -24,7 +24,7 @@ const sequelizeInstance = new Sequelize(DATABASE_URL, {
 // TODO: error handling
 export const connectToDB = async () => {
   try {
-    await sequelizeInstance.sync({ force: true, logging: false });
+    await sequelizeInstance.sync({ alter: true, logging: false });
     console.log("DB connection is successful");
   } catch (error) {}
 };

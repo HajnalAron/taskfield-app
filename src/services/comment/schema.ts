@@ -1,24 +1,29 @@
 import sequelizeInstance from "../../db/connection";
 import { DataTypes, Model } from "sequelize/dist";
 
-export interface workspaceIstance extends Model {
+interface commentInstance extends Model {
   id: number;
-  name: string;
-  organizationId: number;
+  text: string;
+  media?: string;
+  userId: number;
+  taskId: number;
 }
 
-// TODO workspace-tasks, workspace-owner relation, category/badges e.g Marketing/Frontend
-const Workspace = sequelizeInstance.define<workspaceIstance>(
-  "workspace",
+const Comment = sequelizeInstance.define<commentInstance>(
+  "comment",
   {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
       autoIncrement: true
     },
-    name: {
+    text: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    media: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   },
   {
@@ -26,4 +31,4 @@ const Workspace = sequelizeInstance.define<workspaceIstance>(
   }
 );
 
-export default Workspace;
+export default Comment;

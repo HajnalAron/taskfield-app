@@ -1,7 +1,13 @@
 import sequelizeInstance from "../connection";
-import { DataTypes } from "sequelize/dist";
+import { DataTypes, Model } from "sequelize/dist";
 
-const TaskUser = sequelizeInstance.define(
+interface taskUserInstance extends Model {
+  id: number;
+  taskId: number;
+  userId: number;
+}
+
+const TaskUser = sequelizeInstance.define<taskUserInstance>(
   "taskuser",
   {
     id: {
@@ -10,7 +16,6 @@ const TaskUser = sequelizeInstance.define(
       autoIncrement: true
     }
   },
-
   {
     timestamps: true
   }

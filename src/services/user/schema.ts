@@ -1,9 +1,8 @@
 import sequelizeInstance from "../../db/connection";
 import { DataTypes, Model, where } from "sequelize/dist";
 import bcrypt from "bcrypt";
-import { loginData } from "../../../types/loginData";
 
-interface userInstance extends Model {
+export interface userInstance extends Model {
   id: number;
   email: string;
   password: string;
@@ -11,10 +10,10 @@ interface userInstance extends Model {
   surname: string;
   avatar: string;
   role: "administrator" | "support" | "user";
+  checkValidity: (password: string) => Promise<boolean>;
 }
 
 // active???
-
 const User = sequelizeInstance.define<userInstance>(
   "user",
   {
@@ -50,7 +49,7 @@ const User = sequelizeInstance.define<userInstance>(
     },
     avatar: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     }
   },
   {
@@ -60,7 +59,7 @@ const User = sequelizeInstance.define<userInstance>(
 
 User.beforeCreate((user) => {
   const color = Math.floor(Math.random() * 16777215).toString(16);
-  user.avatar = `https://eu.ui-avatars.com/?name=${user.surname}+${user.firstname}&background=${color}&rounded=true`;
+  user.avatar = `https://eu.ui-avatars.com/api/?name=${user.surname}+${user.firstname}&background=${color}&rounded=true`;
 });
 
 User.beforeSave(async (user) => {
@@ -69,30 +68,24 @@ User.beforeSave(async (user) => {
   }
 });
 
-User.prototype.checkValidity = async function async(
-  loginData: loginData
+User.prototype;
+
+User.prototype.checkValidity = async function (
+  password: string
 ): Promise<boolean> {
-  const { email, password } = loginData;
-  const targetUser = await User.findOne({
-    where: {
-      email: email
-    }
-  });
-  if (targetUser) {
-    const isUserCredentialsValid = await bcrypt.compare(
-      targetUser.password,
-      password
-    );
-    if (isUserCredentialsValid) {
-      return true;
-    } else return false;
+  const isValid = await bcrypt.compare(password, this.dataValues.password);
+  if (isValid) {
+    return true;
   } else return false;
 };
 
-User.prototype.toJSON = function (): any {
+User.prototype.toJSON = function ({}): any {
   let user = Object.assign({}, this.get());
+
   delete user.password;
-  delete user.refreshToken;
+  delete user.createdAt;
+  delete user.updatedAt;
+
   return user;
 };
 

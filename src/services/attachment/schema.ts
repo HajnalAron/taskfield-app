@@ -1,22 +1,21 @@
 import sequelizeInstance from "../../db/connection";
 import { DataTypes, Model } from "sequelize/dist";
 
-export interface workspaceIstance extends Model {
+interface attachmentsInstance extends Model {
   id: number;
-  name: string;
-  organizationId: number;
+  link: string;
+  taskId: string;
 }
 
-// TODO workspace-tasks, workspace-owner relation, category/badges e.g Marketing/Frontend
-const Workspace = sequelizeInstance.define<workspaceIstance>(
-  "workspace",
+const Attachment = sequelizeInstance.define<attachmentsInstance>(
+  "attachment",
   {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
       autoIncrement: true
     },
-    name: {
+    link: {
       type: DataTypes.STRING,
       allowNull: false
     }
@@ -26,4 +25,4 @@ const Workspace = sequelizeInstance.define<workspaceIstance>(
   }
 );
 
-export default Workspace;
+export default Attachment;

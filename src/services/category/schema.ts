@@ -5,6 +5,7 @@ interface categoryInstance extends Model {
   id: number;
   text: string;
   color: string;
+  taskId: string;
 }
 
 const Category = sequelizeInstance.define<categoryInstance>(

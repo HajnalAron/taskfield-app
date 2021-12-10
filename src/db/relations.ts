@@ -1,4 +1,6 @@
-import Category from "../services/categories/schema";
+import Attachment from "../services/attachment/schema";
+import Category from "../services/category/schema";
+import Comment from "../services/comment/schema";
 import Organization from "../services/organization/schema";
 import OrganizationUser from "./relation_tables/OrganizationUser";
 import User from "../services/user/schema";
@@ -17,27 +19,31 @@ Task.belongsTo(Workspace);
 Task.hasMany(Category);
 Category.belongsTo(Task);
 
+Task.hasMany(Comment);
+Comment.belongsTo(Task);
+
+User.hasMany(Comment);
+Comment.belongsTo(User);
+
+Task.hasMany(Attachment);
+Attachment.belongsTo(Task);
+
 // many-to-many relations
 User.belongsToMany(Organization, {
-  as: "administartor",
-  through: { model: OrganizationUser },
-  foreignKey: "administratorId"
+  through: { model: OrganizationUser }
 });
 
 User.belongsToMany(Workspace, {
-  as: "member",
-  through: { model: WorkspaceUser },
-  foreignKey: "memberId"
+  through: { model: WorkspaceUser }
 });
 
 User.belongsToMany(Task, {
-  as: "assignee",
-  through: { model: TaskUser },
-  foreignKey: "assigneeId"
+  through: { model: TaskUser }
 });
 
 export default {
   Category,
+  Comment,
   Organization,
   OrganizationUser,
   User,

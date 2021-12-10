@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -w",
     "dev": "cross-env NODE_ENV=development nodemon -r dotenv/config ./build/server.js",
     "test": "cross-env NODE_ENV=testing NODE_OPTIONS=--experimental-vm-modules jest"
   },
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.0",
+    "@types/axios": "^0.14.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",

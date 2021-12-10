@@ -1,15 +1,21 @@
-import JWT from "jsonwebtoken";
+import createHttpError from "http-errors";
+import JWT, { JwtPayload } from "jsonwebtoken";
+import User, { userInstance } from "../services/user/schema";
+
+interface DecodedUser extends JwtPayload {
+  id: string;
+}
 
 export const generateAccessToken = (payload: {
   id: number;
 }): Promise<string | undefined> =>
   new Promise((resolve, reject) => {
-    if (!process.env.encryptionKey) {
+    if (!process.env.JWT_ENCRYPTION_KEY) {
       throw new Error("Missing encryption key");
     } else
       JWT.sign(
         payload,
-        process.env.encryptionKey,
+        process.env.JWT_ENCRYPTION_KEY,
         { expiresIn: "15m" },
         (error, token) => {
           if (error) reject(error);
@@ -18,16 +24,19 @@ export const generateAccessToken = (payload: {
       );
   });
 
-const generateRefreshToken = (payload: {
-  id: number;
-}): Promise<string | undefined> =>
+const generateRefreshToken = (
+  payload: {
+    id: number;
+  },
+  hashedPassword: string
+): Promise<string | undefined> =>
   new Promise((resolve, reject) => {
-    if (!process.env.encryptionKey) {
+    if (!process.env.JWT_ENCRYPTION_KEY) {
       throw new Error("Missing encryption key");
     } else
       JWT.sign(
         payload,
-        process.env.encryptionKey,
+        process.env.JWT_ENCRYPTION_KEY + hashedPassword,
         { expiresIn: "7 days" },
         (error, token) => {
           if (error) reject(error);
@@ -36,14 +45,16 @@ const generateRefreshToken = (payload: {
       );
   });
 
-// export const generateTokens = async (user: any) => {
-//   const accessToken: any = await generateAccessToken({ id: user._id });
-//   const refreshToken: any = await generateRefreshToken({ id: user._id });
+export const generateTokens = async ({ id, password }: userInstance) => {
+  const accessToken = await generateAccessToken({ id: id });
+  const refreshToken = await generateRefreshToken({ id: id }, password);
 
-//   return { accessToken, refreshToken };
-// };
+  return { accessToken, refreshToken };
+};
 
-export const verifyAccesToken = (token: string) =>
+export const verifyAccessToken = (
+  token: string
+): Promise<JwtPayload | undefined> =>
   new Promise((res, rej) => {
     if (!process.env.JWT_ENCRYPTION_KEY) {
       throw new Error("Missing encryption key");
@@ -58,25 +69,38 @@ export const verifyAccesToken = (token: string) =>
       );
   });
 
-export const verifyRefreshToken = (token: string) =>
+export const verifyRefreshToken = (
+  token: string,
+  hashedPassword: string
+): Promise<JwtPayload | undefined> =>
   new Promise((res, rej) => {
     if (!process.env.JWT_ENCRYPTION_KEY) {
       throw new Error("Missing encryption key");
-    }
-    JWT.verify(token, process.env.JWT_ENCRYPTION_KEY, (error, decodedToken) => {
-      if (error) rej(error);
-      else res(decodedToken);
-    });
+    } else
+      JWT.verify(
+        token,
+        process.env.JWT_ENCRYPTION_KEY + hashedPassword,
+        (error, decodedToken) => {
+          if (error) rej(error);
+          else res(decodedToken);
+        }
+      );
   });
 
-// export const verifyAndRegenerateTokens = async (refreshToken: Token) => {
-//   const decodedRefreshToken: any = await verifyRefreshToken(refreshToken);
+// export const verifyAndRegenerateTokens = async (
+//   currentRefreshToken: string,
+//   hashedPassword: string
+// ) => {
+//   const decodedRefreshToken = await verifyRefreshToken(
+//     currentRefreshToken,
+//     hashedPassword
+//   );
 
-//   const user = await UserModel.findById(decodedRefreshToken._id);
+//   const user = await User.findOne({ where: { id: decodedRefreshToken } });
 
 //   if (!user) throw createHttpError(404, "User not found");
 
-//   if (user.refreshToken && user.refreshToken === refreshToken) {
+//   if (currentRefreshToken) {
 //     const { accessToken, refreshToken } = await generateTokens(user);
 
 //     return { accessToken, refreshToken };

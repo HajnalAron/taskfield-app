@@ -13,13 +13,15 @@ router.get("/my", UserAuthMiddleWare, async (req, res, next) => {
     });
     if (organizations) {
       const organizationsData: organizationInstance[] = [];
-      organizations.map(async (org) => {
-        const orgData = await Organization.findByPk(org.id);
-        if (orgData) {
-          organizationsData.push(orgData);
-          res.send(organizationsData);
-        }
-      });
+      await Promise.all(
+        organizations.map(async (org) => {
+          const orgData = await Organization.findByPk(org.id);
+          if (orgData) {
+            organizationsData.push(orgData);
+          }
+        })
+      );
+      res.send(organizationsData);
     } else next(createHttpError(404, "No organizations found for this user"));
   } catch (error) {
     next(error);

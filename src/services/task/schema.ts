@@ -1,7 +1,7 @@
 import sequelizeInstance from "../../db/connection";
 import { DataTypes, Model } from "sequelize/dist";
 
-interface taskInstance extends Model {
+export interface taskInstance extends Model {
   id: number;
   workspaceId: number;
   name: string;

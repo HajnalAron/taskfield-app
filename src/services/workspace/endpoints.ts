@@ -16,13 +16,15 @@ router.get("/my", UserAuthMiddleWare, async (req, res, next) => {
     });
     if (workspaces) {
       const workspacesData: workspaceIstance[] = [];
-      workspaces.map(async (workspace) => {
-        const workData = await Workspace.findByPk(workspace.id);
-        if (workData) {
-          workspacesData.push(workData);
-          res.send(workspacesData);
-        }
-      });
+      await Promise.all(
+        workspaces.map(async (workspace) => {
+          const workData = await Workspace.findByPk(workspace.id);
+          if (workData) {
+            workspacesData.push(workData);
+          }
+        })
+      );
+      res.send(workspacesData);
     } else next(createHttpError(404, "No organizations found for this user"));
   } catch (error) {
     next(error);

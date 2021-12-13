@@ -1,12 +1,35 @@
 import { Router } from "express";
 import createHttpError from "http-errors";
+import { UserAuthMiddleWare } from "../../auth/UserAuthMiddleWare";
 import TaskUser from "../../db/relation_tables/TaskUser";
 import Category from "../category/schema";
 import User from "../user/schema";
 import Workspace from "../workspace/schema";
-import Task from "./schema";
+import Task, { taskInstance } from "./schema";
 
 const router = Router();
+
+router.get("/my", UserAuthMiddleWare, async (req, res, next) => {
+  try {
+    const userTasks = await TaskUser.findAll({
+      where: { userId: req.user!.id }
+    });
+    if (userTasks) {
+      const tasksData: taskInstance[] = [];
+      await Promise.all(
+        userTasks.map(async (task) => {
+          const taskData = await Task.findByPk(task.id);
+          if (taskData) {
+            tasksData.push(taskData);
+          }
+        })
+      );
+      res.send(tasksData);
+    } else next(createHttpError(404, "No tasks found for this user"));
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get("/workspace/:workspaceId", async (req, res, next) => {
   try {

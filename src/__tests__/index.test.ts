@@ -37,6 +37,5 @@ describe("Testing the user/authentication endpoints", () => {
   it("Testing the loggin and token generation", async () => {
     const resp = await request.post("/auth/login").send(testUserData);
     expect(resp.status).toBe(200);
-    console.log(resp.body);
   });
 });

@@ -16,7 +16,7 @@ export const generateAccessToken = (payload: {
       JWT.sign(
         payload,
         process.env.JWT_ENCRYPTION_KEY,
-        { expiresIn: "15m" },
+        { expiresIn: process.env.NODE_ENV === "production" ? "15m" : "7 days" },
         (error, token) => {
           if (error) reject(error);
           else resolve(token);

@@ -30,6 +30,15 @@ router.get("/my", UserAuthMiddleWare, async (req, res, next) => {
 
 router.get("/:organizationId", async (req, res, next) => {
   try {
+    const orgaization = await Organization.findByPk(req.params.organizationId);
+    if (!orgaization)
+      next(
+        createHttpError(
+          404,
+          "Organization not found with the id of " + req.params.organizationId
+        )
+      );
+    res.send(orgaization);
   } catch (error) {
     next(error);
   }

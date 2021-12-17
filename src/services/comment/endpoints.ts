@@ -1,6 +1,7 @@
 import { Router } from "express";
 import createHttpError from "http-errors";
 import Task from "../task/schema";
+import User from "../user/schema";
 import Comment from "./schema";
 
 const router = Router();
@@ -12,7 +13,8 @@ router.get("/:taskId", async (req, res, next) => {
       const comments = await Comment.findAll({
         where: {
           taskId: req.params.taskId
-        }
+        },
+        include: { model: User }
       });
       if (comments) {
         res.send(comments);
@@ -34,7 +36,10 @@ router.get("/:taskId", async (req, res, next) => {
 
 router.post("/:taskId", async (req, res, next) => {
   try {
-    await Comment.create(req.body);
+    await Comment.create({
+      ...req.body,
+      taskId: req.params.taskId
+    });
     res.status(201).send();
   } catch (error) {
     next(error);
@@ -48,7 +53,8 @@ router.put("/:taskId/:CommentId", async (req, res, next) => {
     if (targetTask && (text || color)) {
       const targetComment = await Comment.findByPk(req.params.CommentId);
       if (targetComment) {
-        targetComment.update(req.body);
+        await targetComment.update(req.body);
+        res.send(targetComment);
       } else {
         {
           next(

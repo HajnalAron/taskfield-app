@@ -21,7 +21,8 @@ const sequelizeInstance = new Sequelize(DATABASE_URL, {
   dialect: "postgres",
   ssl: true,
   dialectOptions: {
-    ssl: true
+    ssl: true,
+    rejectUnauthorized: false
   }
 });
 

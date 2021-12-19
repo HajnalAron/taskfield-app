@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "cross-env NODE_ENV=development nodemon -r dotenv/config ./build/server.js",
-    "test": "cross-env NODE_ENV=testing NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "cross-env NODE_ENV=testing NODE_OPTIONS=--experimental-vm-modules jest",
+    "start": "node ./build/server.js"
   },
   "dependencies": {
     "axios": "^0.24.0",

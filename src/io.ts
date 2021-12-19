@@ -77,7 +77,7 @@ io.on("connection", async (socket: SocketWithUser) => {
         const targetWorkspace = await Workspace.findByPk(message.workspaceId);
         if (targetWorkspace && message.text.length > 0) {
           await Message.create({ ...message, userId: socket.user.id });
-          io.to(message.workspaceId.toString()).emit("incoming-message");
+          socket.to(message.workspaceId.toString()).emit("incoming-message");
         }
       } catch (error) {
         console.log(error);

@@ -19,9 +19,8 @@ if (!DATABASE_URL) {
 
 const sequelizeInstance = new Sequelize(DATABASE_URL, {
   dialect: "postgres",
-  ssl: true,
   dialectOptions: {
-    ssl: true,
+    require: false,
     rejectUnauthorized: false
   }
 });

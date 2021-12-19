@@ -18,7 +18,9 @@ router.get("/my", UserAuthMiddleWare, async (req, res, next) => {
       const tasksData: taskInstance[] = [];
       await Promise.all(
         userTasks.map(async (task) => {
-          const taskData = await Task.findByPk(task.id);
+          const taskData = await Task.findByPk(task.id, {
+            include: { model: Category }
+          });
           if (taskData) {
             tasksData.push(taskData);
           }
@@ -172,7 +174,10 @@ router.delete("/:taskId", async (req, res, next) => {
           "Task not found with the id of " + req.params.taskId
         )
       );
-    } else targetTask.destroy();
+    } else {
+      await targetTask.destroy();
+      res.sendStatus(204);
+    }
   } catch (error) {
     next(error);
   }

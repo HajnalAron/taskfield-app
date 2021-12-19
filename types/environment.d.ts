@@ -6,6 +6,8 @@ declare global {
       DEV_DATABASE_CONNECTION_STRING: string;
       TEST_DATABASE_CONNECTION_STRING: string;
       JWT_ENCRYPTION_KEY: string;
+      SOCKET_HTTP_PORT: number;
+      FRONTEND_URL: string;
     }
   }
 }

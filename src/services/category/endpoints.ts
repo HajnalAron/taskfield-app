@@ -34,8 +34,17 @@ router.get("/:taskId", async (req, res, next) => {
 
 router.post("/:taskId", async (req, res, next) => {
   try {
-    await Category.create(req.body);
-    res.send(201);
+    const targetTask = await Task.findByPk(req.params.taskId);
+    if (targetTask) {
+      await Category.create({ ...req.body, taskId: req.params.taskId });
+      res.send(201);
+    } else
+      next(
+        createHttpError(
+          404,
+          "Task not found with the id of " + req.params.taskId
+        )
+      );
   } catch (error) {
     next(error);
   }

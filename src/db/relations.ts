@@ -3,6 +3,7 @@ import Category from "../services/category/schema";
 import Comment from "../services/comment/schema";
 import Organization from "../services/organization/schema";
 import OrganizationUser from "./relation_tables/OrganizationUser";
+import Message from "../services/message/schema";
 import User from "../services/user/schema";
 import Task from "../services/task/schema";
 import TaskUser from "./relation_tables/TaskUser";
@@ -28,6 +29,12 @@ Comment.belongsTo(User);
 Task.hasMany(Attachment);
 Attachment.belongsTo(Task);
 
+Workspace.hasMany(Message);
+Message.belongsTo(Workspace);
+
+User.hasMany(Message);
+Message.belongsTo(User);
+
 // many-to-many relations
 User.belongsToMany(Organization, {
   through: { model: OrganizationUser }
@@ -46,6 +53,7 @@ export default {
   Comment,
   Organization,
   OrganizationUser,
+  Message,
   User,
   Task,
   TaskUser,

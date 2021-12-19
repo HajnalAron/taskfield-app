@@ -26,7 +26,9 @@ export const connectToDB = async () => {
   try {
     await sequelizeInstance.sync({ alter: true, logging: false });
     console.log("DB connection is successful");
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // TODO: error handling

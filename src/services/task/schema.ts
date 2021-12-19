@@ -31,6 +31,7 @@ const Task = sequelizeInstance.define<taskInstance>(
     },
     priority: {
       type: DataTypes.ENUM,
+      defaultValue: "medium",
       values: ["critical", "high", "medium", "low"],
       allowNull: true
     },

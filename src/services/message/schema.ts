@@ -1,28 +1,24 @@
 import sequelizeInstance from "../../db/connection";
 import { DataTypes, Model } from "sequelize/dist";
 
-export interface workspaceIstance extends Model {
+interface messageInstance extends Model {
   id: number;
-  name: string;
-  organizationId: number;
-  logo: string;
+  text: string;
+  userId: number;
+  workspaceId: number;
 }
 
-const Workspace = sequelizeInstance.define<workspaceIstance>(
-  "workspace",
+const Message = sequelizeInstance.define<messageInstance>(
+  "message",
   {
     id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
       autoIncrement: true
     },
-    name: {
+    text: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    logo: {
-      type: DataTypes.STRING,
-      allowNull: true
     }
   },
   {
@@ -30,4 +26,4 @@ const Workspace = sequelizeInstance.define<workspaceIstance>(
   }
 );
 
-export default Workspace;
+export default Message;

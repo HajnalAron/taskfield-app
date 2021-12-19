@@ -78,19 +78,19 @@ router.put("/:taskId/:CommentId", async (req, res, next) => {
   }
 });
 
-router.delete("/:taskId/:CommentId", async (req, res, next) => {
+router.delete("/:taskId/:commentId", async (req, res, next) => {
   try {
     const targetTask = await Task.findByPk(req.params.taskId);
     if (targetTask) {
-      const targetComment = await Comment.findByPk(req.params.CommentId);
+      const targetComment = await Comment.findByPk(req.params.commentId);
       if (targetComment) {
-        targetComment.destroy;
+        await targetComment.destroy();
         res.status(204).send();
       } else {
         next(
           createHttpError(
             404,
-            "Comment not found with the id of " + req.params.CommentId
+            "Comment not found with the id of " + req.params.commentId
           )
         );
       }

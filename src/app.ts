@@ -10,6 +10,7 @@ import attachmentsRouter from "./services/attachment/endpoints";
 import tasksRouter from "./services/task/endpoints";
 import sequelizeInstance from "./db/connection";
 import tables from "./db/relations";
+import messagesRouter from "./services/message/endpoints";
 
 const app = express();
 
@@ -18,9 +19,10 @@ app.use(express.json());
 
 app.use("/auth", authRouter);
 app.use("/attachments", attachmentsRouter);
-app.use("/category", categoriesRouter);
+app.use("/categories", categoriesRouter);
 app.use("/comments", commentsRouter);
 app.use("/organizations", organizationsRouter);
+app.use("/messages", messagesRouter);
 app.use("/tasks", tasksRouter);
 app.use("/users", usersRouter);
 app.use("/workspaces", workspacesRouter);

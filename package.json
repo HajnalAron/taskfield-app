@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc -w",
+    "build": "tsc",
     "dev": "cross-env NODE_ENV=development nodemon -r dotenv/config ./build/server.js",
     "test": "cross-env NODE_ENV=testing NODE_OPTIONS=--experimental-vm-modules jest"
   },

@@ -7,7 +7,7 @@ const { PORT = 3001 } = process.env;
 
 app.listen(PORT, async () => {
   await connectToDB();
-  httpServer.listen(process.env.SOCKET_HTTP_PORT);
+  httpServer.listen(PORT);
   console.log(endpoints(app));
   console.log(`Server is lisening on port ${PORT}`);
 });
